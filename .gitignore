@@ -21,3 +21,4 @@ ollama_settings.json
 
 test_webui.py
 /mflux_env
+.DS_Store

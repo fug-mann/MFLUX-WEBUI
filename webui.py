@@ -230,26 +230,34 @@ def generate_image_batch(flux, prompt, seed, steps, height, width, guidance, num
     return images, filenames
 
 def generate_image_gradio(
-    prompt, model, seed, height, width, steps, guidance, lora_files, metadata, ollama_model, system_prompt, 
-    lora_scales_list, num_images
+    prompt, 
+    model, 
+    seed, 
+    height, 
+    width, 
+    steps, 
+    guidance, 
+    lora_files, 
+    metadata, 
+    ollama_model, 
+    system_prompt,
+    lora_scale_1,
+    lora_scale_2,
+    lora_scale_3,
+    lora_scale_4,
+    lora_scale_5,
+    num_images
 ):
-    print(f"\n--- Generating image (Advanced) ---")
-    print(f"Model: {model}")
-    print(f"Prompt: {prompt}")
-    print(f"Adjusted Dimensions: {height}x{width}")
-    print(f"Steps: {steps}")
-    print(f"Guidance: {guidance}")
-    print(f"LoRA files: {lora_files}")
-    print(f"LoRA scales: {lora_scales_list}")
-    print(f"Number of Images: {num_images}")
-    print_memory_usage("Before generation")
-
+    """
+    Generates an image based on the given parameters.
+    LoRA scales are passed as separate parameters.
+    """
     start_time = time.time()
 
     try:
+        # Process LoRA files and combine scales into a list
         valid_loras = process_lora_files(lora_files)
-        # match number of scales to the number of loras selected
-        lora_scales = lora_scales_list[:len(valid_loras)] if valid_loras else None
+        lora_scales = [lora_scale_1, lora_scale_2, lora_scale_3, lora_scale_4, lora_scale_5][:len(valid_loras)]
 
         seed = None if seed == "" else int(seed)
 
@@ -305,29 +313,23 @@ def generate_image_controlnet_gradio(
     save_canny,
     ollama_model,
     system_prompt,
-    lora_scales_list,
+    lora_scale_1,
+    lora_scale_2,
+    lora_scale_3,
+    lora_scale_4,
+    lora_scale_5,
     num_images
 ):
-    print(f"\n--- Generating image (ControlNet) ---")
-    print(f"Received parameters:")
-    print(f"- prompt: {prompt}")
-    print(f"- model: {model}")
-    print(f"- seed: {seed}")
-    print(f"- height: {height}")
-    print(f"- width: {width}") 
-    print(f"- steps: {steps}")
-    print(f"- guidance: {guidance}")
-    print(f"- controlnet_strength: {controlnet_strength}")
-    print(f"- lora_files: {lora_files}")
-    print(f"- lora_scales_list: {lora_scales_list}")
-    print(f"- save_canny: {save_canny}")
-    print(f"- num_images: {num_images}")
-
+    """
+    Generates an image using ControlNet based on the given parameters.
+    LoRA scales are passed as separate parameters.
+    """
     print_memory_usage("Before generation")
     start_time = time.time()
     generated_images = []
     filenames = []
     canny_image_to_return = None
+
     try:
         valid_loras = process_lora_files(lora_files)
         lora_scales = lora_scales_list[:len(valid_loras)] if valid_loras else None
@@ -773,12 +775,20 @@ def generate_image_i2i_gradio(
     steps,
     guidance,
     lora_files,
-    lora_scales_list,
+    lora_scale_1,
+    lora_scale_2,
+    lora_scale_3,
+    lora_scale_4,
+    lora_scale_5,
     metadata,
     ollama_model,
     system_prompt,
     num_images
 ):
+    """
+    Generates an image based on an initial image (Image-to-Image).
+    LoRA scales are passed as separate parameters.
+    """
     if init_image is None:
         return [], "", prompt
 
